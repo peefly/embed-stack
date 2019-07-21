@@ -1,68 +1,99 @@
-import React, {useState} from 'react'
-import { FaTimes } from 'react-icons/fa'
+import React, {useState } from 'react'
+import { FaArrowAltCircleDown, FaSyncAlt, FaTimes } from 'react-icons/fa'
 import { Rnd } from "react-rnd";
-import { Button } from 'react-bootstrap'
+import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import './Embed.scss';
+import update from 'immutability-helper';
 
 export const Embed = (props) => {
   const {embed} = props;
-
-  const createMarkup = (embedData) => {
-    return {__html: embedData};
-  };
-
-  const backgroundStyle = {
-    //display: "flex",
+  const createMarkup = (embedData) => {return {__html: embedData}}
+  
+  let backgroundStyle = {
     alignItems: "center",
     justifyContent: "center",
     border: "solid 0px #aaa",
-    background: "#222",
-    
+    backgroundColor: "#222",
   };
+  const controlPanelHeight = 32;
+
+  
+  const embedStyleInitial = {
+    top: controlPanelHeight, 
+    backgroundColor: "#222", 
+    width: 1920 * 0.5, 
+    height: 1080 * 0.5, 
+    position: "absolute",
+  }
+
+  const [backgroundVisible, setBackgroundVisible] = useState(false);
+  const [position, setPosition] = useState({x:100 ,y: 100})
+  const [embedStyle, setEmbedStyle] = useState(embedStyleInitial);
 
   let controlPanelStyle = {
-    height: "32px",
-    width: "100%",
-    top: "-32px",
-    left: "-1px",
+    height: controlPanelHeight,
+    right: "0px",
     position: "absolute",
     backgroundColor: "#222",
     color: "#fff",
     border: "solid 0px #aaa",
-    margin: "1px",
     alignItems: "right",
     textAlign: "right",
-  }
-  const [controlPanelVisible, setControlPanelVisible] = useState(false);
-
-  const showControlPanel = (e)=> {
-    setControlPanelVisible(true);
-    console.log("showControlPanel");
-  }
-  const hideControlPanel = (e)=> {
-    setControlPanelVisible(false);
-    console.log("hideControlPanel");
+    visibility: backgroundVisible?"visible":"hidden",
   }
 
+  const resizeHandler = (e, direction, ref, delta, pos) => {
+    setPosition(pos);
+
+    let newW = parseInt(ref.style.width, 10);
+    let newH = parseInt(ref.style.height, 10) - controlPanelHeight;
+    const change = {
+      width: {$set: newW}, 
+      height: {$set: newH}
+    };
+    setEmbedStyle(update( embedStyle,  change));
+  }
+
+  if (backgroundVisible) {
+    backgroundStyle.backgroundColor = "#222";
+  } else {
+    backgroundStyle.backgroundColor = "rgba(0,0,0,0)";
+  }
+
+  
   return (
-      <Rnd
-        style={backgroundStyle}
-        default={{
-          x: 100, y: 100,
-          width: 960, height: 540
-        }}
-        lockAspectRatio
-        onMouseOver={showControlPanel}
-        onMouseOut={hideControlPanel}
-      >
-        { controlPanelVisible &&
-          <div style={controlPanelStyle}>
-            <Button variant="dark" size="sm"><FaTimes /></Button>
-          </div> 
-        }
-        
-        <div className="EmbedBackground full" dangerouslySetInnerHTML={createMarkup(embed)} />
-      </Rnd>
+    <Rnd
+      style={backgroundStyle}
+      lockAspectRatio={embedStyleInitial.width/embedStyleInitial.height}
+      lockAspectRatioExtraHeight={controlPanelHeight}
+      onMouseOver={()=>setBackgroundVisible(true)}
+      onMouseOut={()=>setBackgroundVisible(false)}
+      size={{
+        width: embedStyle.width,
+        height: embedStyle.height + controlPanelHeight
+      }}
+      position={position}
+      onDragStop={(e, d) => { setPosition({x:d.x, y:d.y}) }}
+      onResize={resizeHandler}
+      bounds="window"
+      cancel=".controlPanel"
+    >
+      <div className="controlPanel" style={controlPanelStyle}>
+      
+        <OverlayTrigger key="replace" placement="top" overlay={<Tooltip>取代</Tooltip>}>
+          <Button variant="dark" size="sm"><FaArrowAltCircleDown /></Button>
+        </OverlayTrigger>
+        <OverlayTrigger key="refresh" placement="top" overlay={<Tooltip>重整</Tooltip>}>
+          <Button variant="dark" size="sm"><FaSyncAlt /></Button>
+        </OverlayTrigger>
+        <OverlayTrigger key="close" placement="top" overlay={<Tooltip>關閉</Tooltip>}>
+          <Button variant="dark" size="sm"><FaTimes /></Button>
+        </OverlayTrigger>
+      
+      </div> 
+      <div style={embedStyle} dangerouslySetInnerHTML={createMarkup(embed)} />
+      
+    </Rnd>
     
 
     

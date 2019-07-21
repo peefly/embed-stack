@@ -6,9 +6,7 @@ export const EmbedPanel = ({embedList}) => {
   return (
     <div>
       <div>{allEmbedData}</div>
-      <div>embedList: {embedList}</div>
     </div>
-    
   );
 }
 
