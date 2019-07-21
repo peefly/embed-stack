@@ -3,14 +3,14 @@ import { Button, InputGroup, Form } from 'react-bootstrap';
 import { getEmbedData } from './InputOperator'
 
 export const InputPanel = ({addHandler}) => {
-  const defaultInput = '<iframe src="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2FlenAllenn%2Fvideos%2F890169464681013%2F&show_text=0&width=560" width="560" height="315" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allowFullScreen="true"></iframe>';
+  const defaultInput = '<iframe width="560" height="315" src="https://www.youtube.com/embed/oiz3m_4Wmik" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
   const [embedInput, setEmbedInput] = useState(defaultInput);
   const onInputChange = (evt) => setEmbedInput(evt.target.value);
   const onAddClick = () => {
     if (embedInput === "") return;
     let processedData = getEmbedData(embedInput);
     addHandler(processedData);
-    clearInput();
+    //clearInput();
   }
   const clearInput = () => setEmbedInput("");
   const inputStyle = {

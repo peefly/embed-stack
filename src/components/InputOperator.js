@@ -1,3 +1,5 @@
+import uuidv1 from 'uuid/v1'
+
 const isTwitch = (rawData) => {
   return rawData.includes("https://player.twitch.tv/?channel=")
 }
@@ -15,6 +17,15 @@ const replaceStyleWithFull = (element) => {
   element.removeAttribute("width");
   element.setAttribute("style", "width:100%;height:100%");
   return
+}
+
+const makeParserReturn = (platform, id, embedHtml) => {
+  return {
+    platform: platform,
+    platformId: id,
+    embedHtml: embedHtml,
+    uid: uuidv1()
+  }
 }
 
 const twitchParser = (rawData) => {
@@ -42,7 +53,10 @@ const twitchParser = (rawData) => {
   }
   replaceStyleWithFull(iframeElement);
 
-  return el.innerHTML;
+  let src = iframeElement.getAttribute("src");
+  let id = src.replace("https://player.twitch.tv/?channel=", "");
+  return makeParserReturn(twitch, id, el.innerHTML);
+  //return el.innerHTML;
 }
 
 const facebookParser = (rawData) => {
@@ -60,7 +74,14 @@ const facebookParser = (rawData) => {
   }
   replaceStyleWithFull(iframeElement);
 
-  return el.innerHTML;
+  let src = iframeElement.getAttribute("src");
+  let idData = src.replace("https://www.facebook.com/plugins/video.php?href=", "");
+  idData = idData.replace("&show_text=0&width=560", "");
+  idData = unescape(idData);
+  idData = idData.replace("https://www.facebook.com/", "");
+  let id = idData.substr(0, idData.indexOf("/"));
+  return makeParserReturn(facebook, id, el.innerHTML);
+  //return el.innerHTML;
 }
 
 const youtubeParser = (rawData) => {
@@ -78,10 +99,13 @@ const youtubeParser = (rawData) => {
   }
   replaceStyleWithFull(iframeElement);
 
-  return el.innerHTML;
+  let src = iframeElement.getAttribute("src");
+  let id = src.replace("https://www.youtube.com/embed/", "");
+  return makeParserReturn(youtube, id, el.innerHTML);
+  //return el.innerHTML;
 }
 
-const [twitch, facebook, youtube, unknown] = ["twitch", "facebook", "youtube", "unknown"];
+const [twitch, facebook, youtube, unknown] = ["Twitch", "Facebook", "Youtube", "Unknown"];
 
 const getType = (rawData) => {
   if (isTwitch(rawData)) {
@@ -98,9 +122,9 @@ const getType = (rawData) => {
 }
 
 const parsers = {
-  twitch: twitchParser,
-  facebook: facebookParser,
-  youtube: youtubeParser,
+  Twitch: twitchParser,
+  Facebook: facebookParser,
+  Youtube: youtubeParser,
 }
 
 

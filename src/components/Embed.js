@@ -6,7 +6,8 @@ import './Embed.scss';
 import update from 'immutability-helper';
 
 export const Embed = (props) => {
-  const {embed} = props;
+  const removeHandler = props.removeHandler;
+  const {platform, platformId, embedHtml, uid} = props.embed;
   const createMarkup = (embedData) => {return {__html: embedData}}
   
   let backgroundStyle = {
@@ -40,6 +41,19 @@ export const Embed = (props) => {
     alignItems: "right",
     textAlign: "right",
     visibility: backgroundVisible?"visible":"hidden",
+  }
+  let titlePanelStyle = {
+    height: controlPanelHeight,
+    left: "0px",
+    position: "absolute",
+    backgroundColor: "#222",
+    color: "#fff",
+    border: "solid 0px #aaa",
+    alignItems: "left",
+    textAlign: "left",
+    visibility: backgroundVisible?"visible":"hidden",
+    paddingLeft: 10,
+    lineHeight: `${controlPanelHeight}px`
   }
 
   const resizeHandler = (e, direction, ref, delta, pos) => {
@@ -78,6 +92,9 @@ export const Embed = (props) => {
       bounds="window"
       cancel=".controlPanel"
     >
+      <div className="titlePanel" style={titlePanelStyle}>
+        {platformId} - {platform} ({uid})
+      </div>
       <div className="controlPanel" style={controlPanelStyle}>
       
         <OverlayTrigger key="replace" placement="top" overlay={<Tooltip>取代</Tooltip>}>
@@ -87,11 +104,11 @@ export const Embed = (props) => {
           <Button variant="dark" size="sm"><FaSyncAlt /></Button>
         </OverlayTrigger>
         <OverlayTrigger key="close" placement="top" overlay={<Tooltip>關閉</Tooltip>}>
-          <Button variant="dark" size="sm"><FaTimes /></Button>
+          <Button variant="dark" size="sm" onClick={()=>removeHandler(uid)}><FaTimes /></Button>
         </OverlayTrigger>
       
       </div> 
-      <div style={embedStyle} dangerouslySetInnerHTML={createMarkup(embed)} />
+      <div style={embedStyle} dangerouslySetInnerHTML={createMarkup(embedHtml)} />
       
     </Rnd>
     
