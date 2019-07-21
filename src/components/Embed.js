@@ -7,7 +7,7 @@ import update from 'immutability-helper';
 
 export const Embed = (props) => {
   const removeHandler = props.removeHandler;
-  const {platform, platformId, embedHtml, uid} = props.embed;
+  const {platform, platformId, embedHtml, uid, removed} = props.embed;
   const createMarkup = (embedData) => {return {__html: embedData}}
   
   let backgroundStyle = {
@@ -15,6 +15,7 @@ export const Embed = (props) => {
     justifyContent: "center",
     border: "solid 0px #aaa",
     backgroundColor: "#222",
+    visibility: removed?"none":"visible"
   };
   const controlPanelHeight = 32;
 
@@ -26,10 +27,11 @@ export const Embed = (props) => {
     height: 1080 * 0.5, 
     position: "absolute",
   }
-
+  
   const [backgroundVisible, setBackgroundVisible] = useState(false);
   const [position, setPosition] = useState({x:100 ,y: 100})
   const [embedStyle, setEmbedStyle] = useState(embedStyleInitial);
+  if (removed) return ("");
 
   let controlPanelStyle = {
     height: controlPanelHeight,
@@ -74,6 +76,7 @@ export const Embed = (props) => {
     backgroundStyle.backgroundColor = "rgba(0,0,0,0)";
   }
 
+  
   
   return (
     <Rnd

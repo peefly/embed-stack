@@ -24,7 +24,8 @@ const makeParserReturn = (platform, id, embedHtml) => {
     platform: platform,
     platformId: id,
     embedHtml: embedHtml,
-    uid: uuidv1()
+    uid: uuidv1(),
+    removed: false
   }
 }
 
