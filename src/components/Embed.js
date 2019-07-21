@@ -1,13 +1,19 @@
-import React, {useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { FaArrowAltCircleDown, FaSyncAlt, FaTimes } from 'react-icons/fa'
 import { Rnd } from "react-rnd";
-import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { Button, OverlayTrigger, Tooltip, ButtonGroup } from 'react-bootstrap'
 import './Embed.scss';
 import update from 'immutability-helper';
 
 export const Embed = (props) => {
-  const removeHandler = props.removeHandler;
-  const {platform, platformId, embedHtml, uid, removed} = props.embed;
+  const [, updateState] = useState();
+  const forceUpdate = useCallback(() => {
+    console.log("forceUpdate");
+    return updateState({}), []
+  });
+
+  const {removeHandler, mouseDownHandler} = props;
+  const {platform, platformId, embedHtml, uid, removed, zIndex} = props.embed;
   const createMarkup = (embedData) => {return {__html: embedData}}
   
   let backgroundStyle = {
@@ -15,7 +21,8 @@ export const Embed = (props) => {
     justifyContent: "center",
     border: "solid 0px #aaa",
     backgroundColor: "#222",
-    visibility: removed?"none":"visible"
+    visibility: removed?"none":"visible",
+    zIndex: zIndex
   };
   const controlPanelHeight = 32;
 
@@ -75,8 +82,6 @@ export const Embed = (props) => {
   } else {
     backgroundStyle.backgroundColor = "rgba(0,0,0,0)";
   }
-
-  
   
   return (
     <Rnd
@@ -92,6 +97,7 @@ export const Embed = (props) => {
       position={position}
       onDragStop={(e, d) => { setPosition({x:d.x, y:d.y}) }}
       onResize={resizeHandler}
+      onMouseDown={()=>mouseDownHandler(uid)}
       bounds="window"
       cancel=".controlPanel"
     >
@@ -99,17 +105,17 @@ export const Embed = (props) => {
         {platformId} - {platform} ({uid})
       </div>
       <div className="controlPanel" style={controlPanelStyle}>
-      
-        <OverlayTrigger key="replace" placement="top" overlay={<Tooltip>取代</Tooltip>}>
-          <Button variant="dark" size="sm"><FaArrowAltCircleDown /></Button>
-        </OverlayTrigger>
-        <OverlayTrigger key="refresh" placement="top" overlay={<Tooltip>重整</Tooltip>}>
-          <Button variant="dark" size="sm"><FaSyncAlt /></Button>
-        </OverlayTrigger>
-        <OverlayTrigger key="close" placement="top" overlay={<Tooltip>關閉</Tooltip>}>
-          <Button variant="dark" size="sm" onClick={()=>removeHandler(uid)}><FaTimes /></Button>
-        </OverlayTrigger>
-      
+        <ButtonGroup>
+          <OverlayTrigger key="replace" placement="top" overlay={<Tooltip>取代</Tooltip>}>
+            <Button variant="dark" size="sm"><FaArrowAltCircleDown /></Button>
+          </OverlayTrigger>
+          <OverlayTrigger key="refresh" placement="top" overlay={<Tooltip>重整</Tooltip>}>
+            <Button variant="dark" size="sm" onClick={forceUpdate}><FaSyncAlt /></Button>
+          </OverlayTrigger>
+          <OverlayTrigger key="close" placement="top" overlay={<Tooltip>關閉</Tooltip>}>
+            <Button variant="dark" size="sm" onClick={()=>removeHandler(uid)}><FaTimes /></Button>
+          </OverlayTrigger>
+        </ButtonGroup>
       </div> 
       <div style={embedStyle} dangerouslySetInnerHTML={createMarkup(embedHtml)} />
       

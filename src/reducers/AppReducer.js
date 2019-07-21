@@ -1,25 +1,44 @@
-import { ADD_EMBED, REMOVE_EMBED } from 'actions/app'
+import { ADD_EMBED, REMOVE_EMBED, TOP_EMBED } from 'actions/app'
 import { combineReducers } from 'redux'
+import update from 'immutability-helper';
+import Counter from 'utility/counter'
 
-const initialEmbedListState = []
+export const initialEmbedListDataState = {
+  embedList: []
+}
 
-const embedList = (state=initialEmbedListState, action) => {
-  let newState
+const embedListData = (state=initialEmbedListDataState, action) => {
+  let newState;
+  let change;
+  let isUIDFilter;
+  let idx;
   switch (action.type) {
     case ADD_EMBED:
-      newState = [...state, action.newEmbed]
+      change = {
+        embedList: {$push: [action.newEmbed]}
+      }
+      newState = update(state, change);
       return newState
     case REMOVE_EMBED:
-      const isRemovedFilter = (v) => {return (v.uid === action.uid)} 
-      newState = [...state]
-      let idx = newState.findIndex(isRemovedFilter)
+      isUIDFilter = (v) => {return (v.uid === action.uid)} 
+      newState = {...state}
+      idx = newState.embedList.findIndex(isUIDFilter)
       if (idx === -1) {
         return state
       }
-
-      newState[idx].removed = true;
-
+      newState.embedList[idx].removed = true;
+      newState.embedList[idx].embedHtml = "";
       return newState
+    case TOP_EMBED:
+        isUIDFilter = (v) => {return (v.uid === action.uid)} 
+        newState = {...state}
+        idx = newState.embedList.findIndex(isUIDFilter)
+        if (idx === -1) {
+          return state
+        }
+        newState.embedList[idx].zIndex = Counter.next();
+        return newState
+
     default:
       return state
   }
@@ -27,5 +46,5 @@ const embedList = (state=initialEmbedListState, action) => {
 
 
 export const AppReducer = combineReducers({
-  embedList
+  embedListData
 })

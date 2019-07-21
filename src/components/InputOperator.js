@@ -1,4 +1,5 @@
 import uuidv1 from 'uuid/v1'
+import Counter from 'utility/counter'
 
 const isTwitch = (rawData) => {
   return rawData.includes("https://player.twitch.tv/?channel=")
@@ -25,7 +26,8 @@ const makeParserReturn = (platform, id, embedHtml) => {
     platformId: id,
     embedHtml: embedHtml,
     uid: uuidv1(),
-    removed: false
+    removed: false,
+    zIndex: Counter.next()
   }
 }
 

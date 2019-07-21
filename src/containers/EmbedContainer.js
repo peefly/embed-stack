@@ -1,10 +1,10 @@
 import { connect } from 'react-redux'
 import { EmbedPanel } from 'components/EmbedPanel.js'
-import { RemoveEmbed } from 'actions/app'
+import { RemoveEmbed, TopEmbed } from 'actions/app'
 
 const mapStateToProps = (state) => {
   return {
-    embedList: state.embedList
+    embedListData: state.embedListData
   }
 }
 
@@ -12,7 +12,10 @@ const mapDispatchToProps = (dispatch) => {
   return {
     removeHandler: (uid) => {
       dispatch(RemoveEmbed(uid));
-    }
+    },
+    topHandler: (uid) => {
+      dispatch(TopEmbed(uid));
+    },
   }
 }
 
