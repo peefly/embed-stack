@@ -3,17 +3,14 @@ import { Embed } from './Embed'
 import { initialEmbedListDataState } from 'reducers/AppReducer'
 
 export const EmbedPanel = ({embedListData, removeHandler, topHandler, setHtmlHandler, replaceHandler}) => {
-  
-  let allEmbedData = embedListData.embedList.map((ele, idx)=>{
-    let result = <Embed key={idx} embed={ele} 
+  let allEmbedData = Object.keys(embedListData.embedList).map(key => {
+    let result = <Embed key={key} embed={embedListData.embedList[key]} 
                     removeHandler={removeHandler} mouseDownHandler={topHandler} 
                     setHtmlHandler={setHtmlHandler} replaceHandler={replaceHandler}/>;
     return result
   });
   return (
-    <div>
-      <div>{allEmbedData}</div>
-    </div>
+    <div>{allEmbedData}</div>
   );
 }
 

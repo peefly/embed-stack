@@ -26,8 +26,8 @@ const makeParserReturn = (platform, id, embedHtml) => {
     platformId: id,
     embedHtml: embedHtml,
     uid: uuidv1(),
-    removed: false,
-    zIndex: Counter.next()
+    zIndex: Counter.next(),
+    
   }
 }
 
