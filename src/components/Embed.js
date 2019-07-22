@@ -6,7 +6,7 @@ import './Embed.scss';
 import update from 'immutability-helper';
 
 export const Embed = (props) => {
-  const {removeHandler, mouseDownHandler, setHtmlHandler} = props;
+  const {removeHandler, mouseDownHandler, setHtmlHandler, replaceHandler} = props;
   const {platform, platformId, embedHtml, uid, removed, zIndex} = props.embed;
   const createMarkup = (embedData) => {return {__html: embedData}}
   
@@ -74,6 +74,10 @@ export const Embed = (props) => {
     setHtmlHandler(uid, "");
     setTimeout(setHtmlHandler, 0, uid, embedHtml)
   }
+  const replace = () => {
+    setHtmlHandler(uid, "");
+    setTimeout(replaceHandler, 0, uid)
+  }
 
   if (backgroundVisible) {
     backgroundStyle.backgroundColor = "#222";
@@ -105,7 +109,7 @@ export const Embed = (props) => {
       <div className="controlPanel" style={controlPanelStyle}>
         <ButtonGroup>
           <OverlayTrigger key="replace" placement="top" overlay={<Tooltip>取代</Tooltip>}>
-            <Button variant="dark" size="sm"><FaArrowAltCircleDown /></Button>
+            <Button variant="dark" size="sm" onClick={replace}><FaArrowAltCircleDown /></Button>
           </OverlayTrigger>
           <OverlayTrigger key="refresh" placement="top" overlay={<Tooltip>重整</Tooltip>}>
             <Button variant="dark" size="sm" onClick={refresh}><FaSyncAlt /></Button>

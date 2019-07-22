@@ -1,10 +1,13 @@
-import { ADD_EMBED, REMOVE_EMBED, TOP_EMBED, SET_EMBED_HTML } from 'actions/app'
+import { ADD_EMBED, REMOVE_EMBED, TOP_EMBED, SET_EMBED_HTML, SET_EMBED_INPUT_RAW, IMPORT_EMBED } from 'actions/app'
 import { combineReducers } from 'redux'
 import update from 'immutability-helper';
 import Counter from 'utility/counter'
+import { getEmbedData } from 'components/InputOperator'
 
+const defaultEmbedInputRaw = '<iframe src="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2FLeggyReki%2Fvideos%2F1089448934776057%2F&show_text=0&width=560" width="560" height="315" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allowFullScreen="true"></iframe>';
 export const initialEmbedListDataState = {
-  embedList: []
+  embedList: [],
+  embedInputRaw: defaultEmbedInputRaw
 }
 
 const embedListData = (state=initialEmbedListDataState, action) => {
@@ -48,12 +51,24 @@ const embedListData = (state=initialEmbedListDataState, action) => {
       }
       newState.embedList[idx].embedHtml = action.embedHtml;
       return newState
+    case SET_EMBED_INPUT_RAW:
+      newState = {...state}
+      newState.embedInputRaw = action.embedInputRaw;
+      return newState
+    case IMPORT_EMBED:
+      newState = {...state}
+      idx = getIdxByUid(newState.embedList, action.uid);
+      if (idx === -1) {
+        return state
+      }
+      const processedData = getEmbedData(state.embedInputRaw);
+      newState.embedList[idx] = processedData;
+      return newState
 
     default:
       return state
   }
 }
-
 
 export const AppReducer = combineReducers({
   embedListData

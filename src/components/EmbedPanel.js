@@ -1,12 +1,13 @@
 import React from 'react'
 import { Embed } from './Embed'
+import { initialEmbedListDataState } from 'reducers/AppReducer'
 
-export const EmbedPanel = ({embedListData, removeHandler, topHandler, setHtmlHandler}) => {
+export const EmbedPanel = ({embedListData, removeHandler, topHandler, setHtmlHandler, replaceHandler}) => {
   
   let allEmbedData = embedListData.embedList.map((ele, idx)=>{
     let result = <Embed key={idx} embed={ele} 
                     removeHandler={removeHandler} mouseDownHandler={topHandler} 
-                    setHtmlHandler={setHtmlHandler}/>;
+                    setHtmlHandler={setHtmlHandler} replaceHandler={replaceHandler}/>;
     return result
   });
   return (
@@ -17,7 +18,5 @@ export const EmbedPanel = ({embedListData, removeHandler, topHandler, setHtmlHan
 }
 
 EmbedPanel.defaultProps = {
-  embedListData: {
-    embedList: []
-  }
+  embedListData: initialEmbedListDataState
 }
