@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState } from 'react'
 import { FaArrowAltCircleDown, FaSyncAlt, FaTimes } from 'react-icons/fa'
 import { Rnd } from "react-rnd";
 import { Button, OverlayTrigger, Tooltip, ButtonGroup } from 'react-bootstrap'
@@ -6,13 +6,7 @@ import './Embed.scss';
 import update from 'immutability-helper';
 
 export const Embed = (props) => {
-  const [, updateState] = useState();
-  const forceUpdate = useCallback(() => {
-    console.log("forceUpdate");
-    return updateState({}), []
-  });
-
-  const {removeHandler, mouseDownHandler} = props;
+  const {removeHandler, mouseDownHandler, setHtmlHandler} = props;
   const {platform, platformId, embedHtml, uid, removed, zIndex} = props.embed;
   const createMarkup = (embedData) => {return {__html: embedData}}
   
@@ -76,6 +70,10 @@ export const Embed = (props) => {
     };
     setEmbedStyle(update( embedStyle,  change));
   }
+  const refresh = () => {
+    setHtmlHandler(uid, "");
+    setTimeout(setHtmlHandler, 0, uid, embedHtml)
+  }
 
   if (backgroundVisible) {
     backgroundStyle.backgroundColor = "#222";
@@ -110,7 +108,7 @@ export const Embed = (props) => {
             <Button variant="dark" size="sm"><FaArrowAltCircleDown /></Button>
           </OverlayTrigger>
           <OverlayTrigger key="refresh" placement="top" overlay={<Tooltip>重整</Tooltip>}>
-            <Button variant="dark" size="sm" onClick={forceUpdate}><FaSyncAlt /></Button>
+            <Button variant="dark" size="sm" onClick={refresh}><FaSyncAlt /></Button>
           </OverlayTrigger>
           <OverlayTrigger key="close" placement="top" overlay={<Tooltip>關閉</Tooltip>}>
             <Button variant="dark" size="sm" onClick={()=>removeHandler(uid)}><FaTimes /></Button>
