@@ -26,8 +26,17 @@ const makeParserReturn = (platform, id, embedHtml) => {
     platformId: id,
     embedHtml: embedHtml,
     uid: uuidv1(),
-    zIndex: Counter.next(),
-    
+    layout: {
+      position: {
+        x: 100,
+        y: 100
+      },
+      size: {
+        width: 1920 * 0.5,
+        height: 1080 * 0.5
+      },
+      zIndex: Counter.next()
+    }
   }
 }
 

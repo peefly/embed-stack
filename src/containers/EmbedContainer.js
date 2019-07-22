@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { EmbedPanel } from 'components/EmbedPanel.js'
-import { RemoveEmbed, TopEmbed, SetEmbedHtml, ReplaceEmbed } from 'actions/app'
+import { RemoveEmbed, TopEmbed, SetEmbedHtml, ReplaceEmbed, SetEmbedLayout } from 'actions/app'
 
 const mapStateToProps = (state) => {
   return {
@@ -22,6 +22,9 @@ const mapDispatchToProps = (dispatch) => {
     replaceHandler: (uid) => {
       dispatch(ReplaceEmbed(uid));
     },
+    setLayoutHandler: (uid, layout) => {
+      dispatch(SetEmbedLayout(uid, layout));
+    }
   }
 }
 

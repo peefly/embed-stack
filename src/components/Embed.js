@@ -1,38 +1,45 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { FaArrowAltCircleDown, FaSyncAlt, FaTimes } from 'react-icons/fa'
 import { Rnd } from "react-rnd";
 import { Button, OverlayTrigger, Tooltip, ButtonGroup } from 'react-bootstrap'
 import './Embed.scss';
-import update from 'immutability-helper';
 
 export const Embed = (props) => {
-  const {removeHandler, mouseDownHandler, setHtmlHandler, replaceHandler} = props;
-  const {platform, platformId, embedHtml, uid, removed, zIndex} = props.embed;
+  const {removeHandler, mouseDownHandler, setHtmlHandler, replaceHandler, setLayoutHandler} = props;
+  const {platform, platformId, embedHtml, uid, layout} = props.embed;
   const createMarkup = (embedData) => {return {__html: embedData}}
+
+  const controlPanelHeight = 32;
   
   let backgroundStyle = {
     alignItems: "center",
     justifyContent: "center",
     border: "solid 0px #aaa",
     backgroundColor: "#222",
-    visibility: removed?"none":"visible",
-    zIndex: zIndex
+    zIndex: layout.zIndex,
   };
-  const controlPanelHeight = 32;
-
   
-  const embedStyleInitial = {
+  let embedStyle = {
     top: controlPanelHeight, 
     backgroundColor: "#222", 
-    width: 1920 * 0.5, 
-    height: 1080 * 0.5, 
     position: "absolute",
+    ...layout.size
   }
+
+  const setLayout = ({x, y, width, height}) => {
+    //let newLayout = {...layout};
+    layout.size = {width, height};
+    layout.position = {x, y};
+    setLayoutHandler(uid, layout);
+  }
+
+  useEffect(() => {
+    //console.log(`layout: ${JSON.stringify(layout)}`);
+  })
+  
   
   const [backgroundVisible, setBackgroundVisible] = useState(false);
-  const [position, setPosition] = useState({x:100 ,y: 100})
-  const [embedStyle, setEmbedStyle] = useState(embedStyleInitial);
-  if (removed) return ("");
+  
 
   let controlPanelStyle = {
     height: controlPanelHeight,
@@ -60,15 +67,9 @@ export const Embed = (props) => {
   }
 
   const resizeHandler = (e, direction, ref, delta, pos) => {
-    setPosition(pos);
-
     let newW = parseInt(ref.style.width, 10);
     let newH = parseInt(ref.style.height, 10) - controlPanelHeight;
-    const change = {
-      width: {$set: newW}, 
-      height: {$set: newH}
-    };
-    setEmbedStyle(update( embedStyle,  change));
+    setLayout({width: newW, height: newH, ...pos})
   }
   const refresh = () => {
     setHtmlHandler(uid, "");
@@ -88,16 +89,16 @@ export const Embed = (props) => {
   return (
     <Rnd
       style={backgroundStyle}
-      lockAspectRatio={embedStyleInitial.width/embedStyleInitial.height}
+      lockAspectRatio={embedStyle.width/embedStyle.height}
       lockAspectRatioExtraHeight={controlPanelHeight}
       onMouseOver={()=>setBackgroundVisible(true)}
       onMouseOut={()=>setBackgroundVisible(false)}
+      position={layout.position}
       size={{
-        width: embedStyle.width,
-        height: embedStyle.height + controlPanelHeight
+        width: layout.size.width, 
+        height: layout.size.height + controlPanelHeight
       }}
-      position={position}
-      onDragStop={(e, d) => { setPosition({x:d.x, y:d.y}) }}
+      onDragStop={(e, d) => { setLayout({...layout.size, ...d}) }}
       onResize={resizeHandler}
       onMouseDown={()=>mouseDownHandler(uid)}
       bounds="window"
@@ -119,7 +120,12 @@ export const Embed = (props) => {
           </OverlayTrigger>
         </ButtonGroup>
       </div> 
-      <div style={embedStyle} dangerouslySetInnerHTML={createMarkup(embedHtml)} />
+      { true &&
+        <div style={embedStyle} dangerouslySetInnerHTML={createMarkup(embedHtml)} />
+      }
+      { false && // placeholder for debug
+        <div style={embedStyle} />
+      }
       
     </Rnd>
     

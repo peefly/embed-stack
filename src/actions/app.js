@@ -4,6 +4,7 @@ export const TOP_EMBED = "TOP_EMBED";
 export const SET_EMBED_HTML = "SET_EMBED_HTML";
 export const SET_EMBED_INPUT_RAW = "SET_EMBED_INPUT_RAW";
 export const REPLACE_EMBED = "REPLACE_EMBED";
+export const SET_EMBED_LAYOUT = "SET_EMBED_LAYOUT";
 
 export const AddEmbed = (newEmbed) => {
   const action = {
@@ -50,6 +51,15 @@ export const ReplaceEmbed = (uid) => {
   const action = {
     type: REPLACE_EMBED,
     uid: uid
+  }
+  return action;
+}
+
+export const SetEmbedLayout = (uid, layout) => {
+  const action = {
+    type: SET_EMBED_LAYOUT,
+    uid: uid,
+    layout: layout
   }
   return action;
 }
