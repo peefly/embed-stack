@@ -10,6 +10,10 @@ export const Counter = {
   current: () => {
     //console.log(`counter.current: ${counter}`);
     return counter;
+  },
+  setCurrent: (n) => {
+    counter = n;
+    return counter;
   }
 }
 

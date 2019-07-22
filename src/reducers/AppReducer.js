@@ -10,8 +10,11 @@ export const initialEmbedListDataState = {
 const embedListData = (state=initialEmbedListDataState, action) => {
   let newState;
   let change;
-  let isUIDFilter;
   let idx;
+  const getIdxByUid = (ary, uid) => {
+    const ftr = (v) => {return v.uid === uid}
+    return ary.findIndex(ftr)
+  }
   //console.log(`embedListData action: ${JSON.stringify(action)}`);
   switch (action.type) {
     case ADD_EMBED:
@@ -21,9 +24,8 @@ const embedListData = (state=initialEmbedListDataState, action) => {
       newState = update(state, change);
       return newState
     case REMOVE_EMBED:
-      isUIDFilter = (v) => {return (v.uid === action.uid)} 
       newState = {...state}
-      idx = newState.embedList.findIndex(isUIDFilter)
+      idx = getIdxByUid(newState.embedList, action.uid);
       if (idx === -1) {
         return state
       }
@@ -31,18 +33,16 @@ const embedListData = (state=initialEmbedListDataState, action) => {
       newState.embedList[idx].embedHtml = "";
       return newState
     case TOP_EMBED:
-      isUIDFilter = (v) => {return (v.uid === action.uid)} 
       newState = {...state}
-      idx = newState.embedList.findIndex(isUIDFilter)
+      idx = getIdxByUid(newState.embedList, action.uid);
       if (idx === -1) {
         return state
       }
       newState.embedList[idx].zIndex = Counter.next();
       return newState
     case SET_EMBED_HTML:
-      isUIDFilter = (v) => {return (v.uid === action.uid)} 
       newState = {...state}
-      idx = newState.embedList.findIndex(isUIDFilter)
+      idx = getIdxByUid(newState.embedList, action.uid);
       if (idx === -1) {
         return state
       }
