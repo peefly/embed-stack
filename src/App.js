@@ -13,7 +13,6 @@ function App() {
       <div className="EmbedContainer">
         <EmbedContainer />
       </div>
-      
     </div>
     
   );

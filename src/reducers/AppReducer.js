@@ -1,6 +1,6 @@
 import { ADD_EMBED, REMOVE_EMBED, TOP_EMBED, SET_EMBED_HTML, SET_EMBED_INPUT_RAW, REPLACE_EMBED, SET_EMBED_LAYOUT } from 'actions/app'
 import { combineReducers } from 'redux'
-import Counter from 'utility/counter'
+import Counter from 'utility/Counter'
 import { getEmbedData } from 'components/InputOperator'
 
 const defaultEmbedInputRaw = '';

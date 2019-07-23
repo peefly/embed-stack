@@ -1,0 +1,11 @@
+.linkStyle { 
+  color: #CCC;
+  cursor: pointer;
+  font-family: 'Noto Sans TC', sans-serif;
+  &:hover {
+      color: #EEE;
+      text-decoration: underline;
+  }
+  
+
+}

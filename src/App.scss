@@ -4,10 +4,9 @@ body {
     .InputContainer {
       display: block;
       position: absolute;
-      width: 100%;
       top: 0px;
-      left: 0px;
-      z-index: 10000;
+      right: 0px;
+      z-index: 1;
     }
     .EmbedContainer {
       display:block;

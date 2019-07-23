@@ -1,5 +1,5 @@
 import uuidv1 from 'uuid/v1'
-import Counter from 'utility/counter'
+import Counter from 'utility/Counter'
 
 const isTwitch = (rawData) => {
   return rawData.includes("https://player.twitch.tv/?channel=")
