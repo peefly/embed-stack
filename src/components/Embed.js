@@ -109,13 +109,13 @@ export const Embed = (props) => {
       </div>
       <div className="controlPanel" style={controlPanelStyle}>
         <ButtonGroup>
-          <OverlayTrigger key="replace" placement="top" overlay={<Tooltip>取代</Tooltip>}>
+          <OverlayTrigger key="replace" placement="bottom" delay="500" overlay={<Tooltip>取代</Tooltip>}>
             <Button variant="dark" size="sm" onClick={replace}><FaArrowAltCircleDown /></Button>
           </OverlayTrigger>
-          <OverlayTrigger key="refresh" placement="top" overlay={<Tooltip>重整</Tooltip>}>
+          <OverlayTrigger key="refresh" placement="bottom" delay="500" overlay={<Tooltip>重整</Tooltip>}>
             <Button variant="dark" size="sm" onClick={refresh}><FaSyncAlt /></Button>
           </OverlayTrigger>
-          <OverlayTrigger key="close" placement="top" overlay={<Tooltip>關閉</Tooltip>}>
+          <OverlayTrigger key="close" placement="bottom" delay="500" overlay={<Tooltip>關閉</Tooltip>}>
             <Button variant="dark" size="sm" onClick={()=>removeHandler(uid)}><FaTimes /></Button>
           </OverlayTrigger>
         </ButtonGroup>
