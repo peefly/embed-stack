@@ -36,7 +36,7 @@ export const InputPanel = (props) => {
         <Modal.Body>
           <p>
             <strong style={{color: "#B200FF"}}>Twitch</strong><br />
-            <span>[實況右下角分享] → [嵌入式頻道]</span>
+            <span>[實況右下角分享] → [嵌入] → [使用 iframe]</span>
           </p>
           <p>
             <strong>

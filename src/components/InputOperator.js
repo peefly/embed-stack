@@ -43,17 +43,6 @@ const makeParserReturn = (platform, id, embedHtml) => {
 const twitchParser = (rawData) => {
   let el = document.createElement( 'div' );
   el.innerHTML = rawData;
-  let linkElements = el.getElementsByTagName("a");
-  let linkElement;
-  if (linkElements.length === 1) {
-    linkElement = linkElements[0];
-  } 
-  else {
-    console.error(`invalid twitch rawData: ${rawData}`);
-    return
-  }
-  linkElement.remove();
-
   let iframeElements = el.getElementsByTagName("iframe");
   let iframeElement;
   if (iframeElements.length === 1) {
@@ -66,7 +55,8 @@ const twitchParser = (rawData) => {
   replaceStyleWithFull(iframeElement);
 
   let src = iframeElement.getAttribute("src");
-  let id = src.replace("https://player.twitch.tv/?channel=", "");
+  iframeElement.setAttribute("src", src.replace("www.example.com" ,"peefly.github.io"));
+  let id = src.replace("https://player.twitch.tv/?channel=", "").replace("&parent=www.example.com", "");
   return makeParserReturn(twitch, id, el.innerHTML);
   //return el.innerHTML;
 }
